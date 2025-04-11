@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mumbai Temperature Log</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f0f8ff;
+    }
+    h1 {
+      color: #444;
+    }
+    .log {
+      margin-top: 20px;
+      background: white;
+      padding: 10px;
+      border-radius: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .log div {
+      padding: 5px 0;
+      border-bottom: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌆 Live Mumbai Temperature</h1>
+  <div class="log" id="log"></div>
+
+  <script>
+    const log = document.getElementById('log');
+
+    function fetchTemperature() {
+      fetch('/temperature')         //Fetch data from server.js api result.
+        .then(res => res.json())
+        .then(data => {
+          const entry = document.createElement('div');
+          console.log(data);
+          entry.textContent = `[${data.time}] 🌡️ Temperature: ${data.temperature}°C`;
+          log.appendChild(entry);
+          log.scrollTop = log.scrollHeight; // Auto scroll to bottom
+        })
+        .catch(err => {
+          console.error('Error fetching temperature:', err);
+        });
+    }
+    setInterval(fetchTemperature, 1000);
+    fetchTemperature(); // Fetch immediately on page load
+  </script>
+</body>
+</html>
